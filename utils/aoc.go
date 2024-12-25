@@ -2,6 +2,11 @@ package aoc
 
 import "strings"
 
+func ParseInput2(input []byte) []string {
+	lines := strings.Split(strings.TrimSpace(string(input)), "\n\n")
+
+	return lines
+}
 func ParseInput(input []byte) []string {
 	lines := strings.Split(strings.TrimSpace(string(input)), "\n")
 

@@ -20,8 +20,8 @@ func Part1(input []byte) int {
 	// row := 11
 	// column := 7
 
-	row := 103
-	column := 101
+	row := 101
+	column := 103
 
 	mapValues := make(map[Point]int)
 
@@ -32,7 +32,7 @@ func Part1(input []byte) int {
 		x, y := posAfterTime(row, column, values["px"], values["py"], values["vx"], values["vy"], 100)
 		fmt.Println("Position after time:", x, y)
 
-		if mapValues[Point{x, y}] == 1 {
+		if mapValues[Point{x, y}] >= 1 {
 			mapValues[Point{x, y}] += 1
 		} else {
 			mapValues[Point{x, y}] = 1
@@ -50,11 +50,117 @@ func Part1(input []byte) int {
 
 }
 
+func mapValues(row, column int, lines []string, time int) map[Point]int {
+	mapValues := make(map[Point]int)
+
+	for _, line := range lines {
+		values := parseValues(line)
+		fmt.Println("Parsed values:", values)
+
+		x, y := posAfterTime(row, column, values["px"], values["py"], values["vx"], values["vy"], time)
+		fmt.Println("Position after time:", x, y)
+
+		if mapValues[Point{x, y}] >= 1 {
+			mapValues[Point{x, y}] += 1
+		} else {
+			mapValues[Point{x, y}] = 1
+		}
+
+	}
+	return mapValues
+}
+
+func Part2(input []byte) int {
+
+	lines := aoc.ParseInput(input)
+
+	// row := 11
+	// column := 7
+
+	row := 101
+	column := 103
+
+	mapValues := mapValues(row, column, lines, 7492)
+
+	printMap(row, column, mapValues)
+
+	// for i := 0; i < 100000; i++ {
+	// 	clearMap(row, column, mapValues)
+	//
+	// 	for _, line := range lines {
+	// 		values := parseValues(line)
+	// 		fmt.Println("Parsed values:", values)
+	//
+	// 		x, y := posAfterTime(row, column, values["px"], values["py"], values["vx"], values["vy"], i)
+	// 		fmt.Println("Position after time:", x, y)
+	//
+	// 		if mapValues[Point{x, y}] >= 1 {
+	// 			mapValues[Point{x, y}] += 1
+	// 		} else {
+	// 			mapValues[Point{x, y}] = 1
+	// 		}
+	//
+	// 	}
+	//
+	// 	if isChrismasTree(row, column, mapValues) {
+	// 		fmt.Println("Found a chrismas tree at time:", i)
+	// 		break
+	// 	}
+	// }
+
+	// fmt.Println("Map values:", mapValues)
+
+	return 0
+}
+func clearMap(row int, column int, mapValues map[Point]int) {
+	for i := 0; i < row; i++ {
+		for j := 0; j < column; j++ {
+			mapValues[Point{i, j}] = 0
+		}
+	}
+}
+
+func isChrismasTree(row int, column int, mapValues map[Point]int) bool {
+	lineLength := 10 // Define the length of the straight line to check for
+
+	// Check for vertical lines
+	for x := 0; x < row; x++ {
+		count := 0
+		for y := 0; y < column; y++ {
+			if mapValues[Point{x, y}] >= 1 {
+				count++
+				if count >= lineLength {
+					fmt.Println("Found a vertical line at x:", x)
+					return true
+				}
+			} else {
+				count = 0
+			}
+		}
+	}
+
+	return false
+}
+
+func printMap(row int, column int, mapValues map[Point]int) {
+	for i := 0; i < row; i++ {
+		for j := 0; j < column; j++ {
+			if mapValues[Point{i, j}] >= 1 {
+				fmt.Print("#")
+			} else {
+				fmt.Print(".")
+			}
+		}
+		fmt.Println()
+	}
+}
+
 func countInQuadrants(row int, column int, mapValues map[Point]int) []int {
 	quadrants := make([]int, 4)
 	for point, value := range mapValues {
 		if point.x == row/2 || point.y == column/2 {
 			// Skip robots exactly in the middle
+			fmt.Println("Skipping robot in the middle, point:", point)
 			continue
 		}
 		if point.x < row/2 && point.y < column/2 {

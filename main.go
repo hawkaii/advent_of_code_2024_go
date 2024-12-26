@@ -7,13 +7,13 @@ import (
 )
 
 func main() {
-	input, err := os.ReadFile("../inputs/eg14.txt")
-	// input, err := os.ReadFile("../inputs/day13.txt")
+	// input, err := os.ReadFile("../inputs/eg14.txt")
+	input, err := os.ReadFile("../inputs/day14.txt")
 
 	if err != nil {
 		panic(err)
 	}
-	ans := day14.Part1(input)
+	ans := day14.Part2(input)
 	println(ans)
 
 }
